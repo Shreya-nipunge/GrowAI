@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalation Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+        }
+        h1 {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 0.85em;
+        }
+        .status.open {
+            background: orange;
+        }
+        .status.resolved {
+            background: green;
+        }
+        .view-btn {
+            background: #007bff;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .view-btn:hover {
+            background: #0056b3;
+        }
+        .note-preview {
+            color: gray;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Escalation Dashboard</h1>
+
+    {% if escalations %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Query</th>
+                <th>Latest Note</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in escalations %}
+            <tr>
+                <td>{{ e.id }}</td>
+                <td>{{ e.user }}</td>
+                <td>{{ e.query }}</td>
+                <td class="note-preview">
+                    {% if e.notes %}
+                        {{ e.notes[-1].msg }}
+                    {% else %}
+                        No replies yet
+                    {% endif %}
+                </td>
+                <td><span class="status {{ e.status }}">{{ e.status | capitalize }}</span></td>
+                <td><a href="/escalation/{{ e.id }}" class="view-btn">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No escalations found.</p>
+    {% endif %}
+</div>
+</body>
+</html>

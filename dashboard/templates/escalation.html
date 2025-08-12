@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalation {{ item.id }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+        }
+        h1 { margin-bottom: 5px; }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+            font-size: 0.9em;
+        }
+        .status.open { background: orange; }
+        .status.resolved { background: green; }
+        .chat-box {
+            margin-top: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+        .note {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+        .advisor {
+            background: #d1e7ff;
+            text-align: left;
+        }
+        .system {
+            background: #ffe4b5;
+            text-align: center;
+            font-style: italic;
+        }
+        .user {
+            background: #e0ffe0;
+            text-align: right;
+        }
+        small {
+            display: block;
+            margin-top: 3px;
+            font-size: 0.75em;
+            color: gray;
+        }
+        form {
+            margin-top: 15px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            resize: none;
+            height: 80px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 8px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 5px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button.resolve {
+            background: green;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Escalation #{{ item.id }}</h1>
+    <p><strong>User:</strong> {{ item.user }}</p>
+    <p><strong>Query:</strong> {{ item.query }}</p>
+    <p><strong>Confidence:</strong> {{ item.confidence }}</p>
+    <span class="status {{ item.status }}">{{ item.status | capitalize }}</span>
+
+    <div class="chat-box">
+        {% if item.notes %}
+            {% for note in item.notes %}
+                <div class="note {{ note.by }}">
+                    {{ note.msg }}
+                    <small>{{ note.timestamp }}</small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No messages yet.</p>
+        {% endif %}
+    </div>
+
+    {% if item.status != "resolved" %}
+    <form method="post" action="/escalation/{{ item.id }}/respond">
+        <textarea name="message" placeholder="Type your reply here..." required></textarea>
+        <button type="submit">Send Reply</button>
+    </form>
+
+    <form method="post" action="/escalation/{{ item.id }}/resolve">
+        <button type="submit" class="resolve">Mark as Resolved</button>
+    </form>
+    {% endif %}
+
+    <p><a href="/">⬅ Back to Dashboard</a></p>
+</div>
+</body>
+</html>
