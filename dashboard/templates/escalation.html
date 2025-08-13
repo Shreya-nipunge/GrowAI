@@ -27,6 +27,7 @@
             border-radius: 5px;
             color: white;
             font-size: 0.9em;
+            text-transform: capitalize;
         }
         .status.open { background: orange; }
         .status.resolved { background: green; }
@@ -74,6 +75,7 @@
             height: 80px;
             border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 0.95em;
         }
         button {
             margin-top: 8px;
@@ -87,6 +89,14 @@
         button.resolve {
             background: green;
         }
+        .attachment-list {
+            margin-top: 10px;
+        }
+        .attachment-list a {
+            display: block;
+            color: #007bff;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -95,14 +105,25 @@
     <p><strong>User:</strong> {{ item.user }}</p>
     <p><strong>Query:</strong> {{ item.query }}</p>
     <p><strong>Confidence:</strong> {{ item.confidence }}</p>
-    <span class="status {{ item.status }}">{{ item.status | capitalize }}</span>
+    <span class="status {{ item.status }}">{{ item.status }}</span>
+
+    {% if item.attachments and item.attachments|length > 0 %}
+    <div class="attachment-list">
+        <strong>Attachments:</strong>
+        {% for att in item.attachments %}
+            <a href="{{ att.url }}" target="_blank">{{ att.name or "View Attachment" }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="chat-box">
         {% if item.notes %}
             {% for note in item.notes %}
                 <div class="note {{ note.by }}">
                     {{ note.msg }}
-                    <small>{{ note.timestamp }}</small>
+                    {% if note.timestamp %}
+                        <small>{{ note.timestamp }}</small>
+                    {% endif %}
                 </div>
             {% endfor %}
         {% else %}

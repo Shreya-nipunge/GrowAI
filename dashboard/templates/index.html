@@ -13,7 +13,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: auto;
             background: white;
             border-radius: 10px;
@@ -33,16 +33,22 @@
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: left;
+            vertical-align: top;
         }
         table th {
             background-color: #007bff;
             color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+            cursor: pointer;
         }
         .status {
             padding: 5px 10px;
             border-radius: 5px;
             color: white;
             font-size: 0.85em;
+            text-transform: capitalize;
         }
         .status.open {
             background: orange;
@@ -50,25 +56,33 @@
         .status.resolved {
             background: green;
         }
-        .view-btn {
-            background: #007bff;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .view-btn:hover {
-            background: #0056b3;
-        }
         .note-preview {
             color: gray;
             font-size: 0.9em;
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .refresh-btn {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 10px;
+            float: right;
+        }
+        .refresh-btn:hover {
+            background: #218838;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Escalation Dashboard</h1>
+    <a href="/" class="refresh-btn">🔄 Refresh</a>
 
     {% if escalations %}
     <table>
@@ -79,12 +93,11 @@
                 <th>Query</th>
                 <th>Latest Note</th>
                 <th>Status</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             {% for e in escalations %}
-            <tr>
+            <tr onclick="window.location='/escalation/{{ e.id }}'">
                 <td>{{ e.id }}</td>
                 <td>{{ e.user }}</td>
                 <td>{{ e.query }}</td>
@@ -95,8 +108,7 @@
                         No replies yet
                     {% endif %}
                 </td>
-                <td><span class="status {{ e.status }}">{{ e.status | capitalize }}</span></td>
-                <td><a href="/escalation/{{ e.id }}" class="view-btn">View</a></td>
+                <td><span class="status {{ e.status }}">{{ e.status }}</span></td>
             </tr>
             {% endfor %}
         </tbody>
