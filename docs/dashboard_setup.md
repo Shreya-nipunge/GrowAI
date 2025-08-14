@@ -14,6 +14,7 @@ This document explains how to run the escalation dashboard locally, configure en
 ### **Steps**
 1. Clone the repository:
 
+```bash
 git clone https://github.com/Shreya-nipunge/GrowAI.git
 cd GrowAI
 
@@ -21,11 +22,9 @@ cd GrowAI
 
 pip install -r requirements.txt
 
-
 3. Copy `.env.example` to `.env`:
 
 cp .env.example .env
-
 
 4. Edit `.env`:
 
