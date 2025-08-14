@@ -17,6 +17,7 @@ This document explains how to run the escalation dashboard locally, configure en
 ```bash
 git clone https://github.com/Shreya-nipunge/GrowAI.git
 cd GrowAI
+```
 
 2. Install dependencies:
 
@@ -33,16 +34,22 @@ cp .env.example .env
 
 Example:
 
+```bash
 BACKEND_URL=http://localhost:9000
 ADMIN_TOKEN=my-secret-token
+```
 
 5. Start the dashboard:
 
+```bash
 uvicorn app:app --reload
+```
 
 6. Open your browser and go to:
 
+```bash
 http://127.0.0.1:8000
+```
 
 ---
 
@@ -65,6 +72,7 @@ Returns a list of escalation objects.
 
 #### Example Response:
 
+```bash
 [
   {
     "id": 1,
@@ -87,6 +95,7 @@ Returns a list of escalation objects.
     ]
   }
 ]
+```
 
 ---
 
@@ -96,6 +105,7 @@ Returns details of a single escalation by ID.
 
 #### Example Response:
 
+```bash
 {
   "id": 1,
   "user": "+91-98xxxxxxx",
@@ -116,6 +126,7 @@ Returns details of a single escalation by ID.
     }
   ]
 }
+```
 
 ---
 
@@ -123,13 +134,17 @@ Returns details of a single escalation by ID.
 
 Payload:
 
+```bash
 { "message": "Your reply text here" }
+```
 
 ### **POST** `/api/escalations/{id}/resolve`
 
 Payload:
 
+```bash
 { "note": "Resolved via dashboard" }
+```
 
 ---
 
