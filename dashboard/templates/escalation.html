@@ -29,8 +29,8 @@
             font-size: 0.9em;
             text-transform: capitalize;
         }
-        .status.open { background: orange; }
-        .status.resolved { background: green; }
+        .status.open { background: #ff9800; }
+        .status.resolved { background: #4caf50; }
         .chat-box {
             margin-top: 15px;
             background: #f9f9f9;
@@ -46,28 +46,17 @@
             border-radius: 6px;
             font-size: 0.95em;
         }
-        .advisor {
-            background: #d1e7ff;
-            text-align: left;
-        }
-        .system {
-            background: #ffe4b5;
-            text-align: center;
-            font-style: italic;
-        }
-        .user {
-            background: #e0ffe0;
-            text-align: right;
-        }
+        .advisor { background: #d1e7ff; text-align: left; }
+        .system { background: #ffe4b5; text-align: center; font-style: italic; }
+        .user { background: #e0ffe0; text-align: right; }
         small {
             display: block;
             margin-top: 3px;
             font-size: 0.75em;
             color: gray;
         }
-        form {
-            margin-top: 15px;
-        }
+        form { margin-top: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
         textarea {
             width: 100%;
             padding: 10px;
@@ -86,21 +75,37 @@
             color: white;
             cursor: pointer;
         }
-        button.resolve {
-            background: green;
+        button:focus, textarea:focus {
+            outline: 2px solid #004085;
+            outline-offset: 2px;
         }
-        .attachment-list {
-            margin-top: 10px;
-        }
+        button.resolve { background: #4caf50; }
+
+        .attachment-list { margin-top: 10px; }
         .attachment-list a {
             display: block;
             color: #007bff;
             text-decoration: none;
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 15px; width: 100%; }
+            textarea { height: 60px; }
+            button { width: 100%; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 1.2em; }
+            .status { font-size: 0.8em; padding: 4px 8px; }
+        }
     </style>
 </head>
 <body>
-<div class="container">
+<div id="loading" style="text-align:center; padding: 20px; font-size: 1.2em;">
+    <em>Loading…</em>
+</div>
+
+<div class="container" style="display:none;" id="main-content">
     <h1>Escalation #{{ item.id }}</h1>
     <p><strong>User:</strong> {{ item.user }}</p>
     <p><strong>Query:</strong> {{ item.query }}</p>
@@ -133,16 +138,23 @@
 
     {% if item.status != "resolved" %}
     <form method="post" action="/escalation/{{ item.id }}/respond">
-        <textarea name="message" placeholder="Type your reply here..." required></textarea>
-        <button type="submit">Send Reply</button>
+        <label for="message">Your Reply</label>
+        <textarea id="message" name="message" placeholder="Type your reply here..." required></textarea>
+        <button type="submit" aria-label="Send Reply">Send Reply</button>
     </form>
 
     <form method="post" action="/escalation/{{ item.id }}/resolve">
-        <button type="submit" class="resolve">Mark as Resolved</button>
+        <button type="submit" class="resolve" aria-label="Mark as Resolved">Mark as Resolved</button>
     </form>
     {% endif %}
 
     <p><a href="/">⬅ Back to Dashboard</a></p>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+    });
+</script>
 </body>
-</html>

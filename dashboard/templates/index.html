@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,37 +13,45 @@
             margin: 0;
             padding: 20px;
         }
+
         .container {
             max-width: 1000px;
             margin: auto;
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
         }
+
         h1 {
             margin-bottom: 15px;
             text-align: center;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-        table th, table td {
+
+        table th,
+        table td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: left;
             vertical-align: top;
         }
+
         table th {
-            background-color: #007bff;
+            background-color: #0056b3;
             color: white;
         }
+
         tr:hover {
             background-color: #f1f1f1;
             cursor: pointer;
         }
+
         .status {
             padding: 5px 10px;
             border-radius: 5px;
@@ -50,12 +59,15 @@
             font-size: 0.85em;
             text-transform: capitalize;
         }
+
         .status.open {
-            background: orange;
+            background: #ff9800;
         }
+
         .status.resolved {
-            background: green;
+            background: #4caf50;
         }
+
         .note-preview {
             color: gray;
             font-size: 0.9em;
@@ -64,6 +76,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .refresh-btn {
             display: inline-block;
             background: #28a745;
@@ -74,48 +87,106 @@
             margin-bottom: 10px;
             float: right;
         }
+
+        .refresh-btn:focus,
         .refresh-btn:hover {
             background: #218838;
+            outline: 2px solid #004085;
+            outline-offset: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .refresh-btn {
+                float: none;
+                display: block;
+                margin: 10px auto;
+                text-align: center;
+            }
+
+            table th,
+            table td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .note-preview {
+                max-width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+
+            .status {
+                font-size: 0.75em;
+            }
+
+            .note-preview {
+                max-width: 100px;
+            }
         }
     </style>
 </head>
-<body>
-<div class="container">
-    <h1>Escalation Dashboard</h1>
-    <a href="/" class="refresh-btn">🔄 Refresh</a>
 
-    {% if escalations %}
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Query</th>
-                <th>Latest Note</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for e in escalations %}
-            <tr onclick="window.location='/escalation/{{ e.id }}'">
-                <td>{{ e.id }}</td>
-                <td>{{ e.user }}</td>
-                <td>{{ e.query }}</td>
-                <td class="note-preview">
-                    {% if e.notes %}
+<body>
+    <div id="loading" style="text-align:center; padding: 20px; font-size: 1.2em;">
+        <em>Loading…</em>
+    </div>
+
+    <div class="container" style="display:none;" id="main-content">
+        <h1>Escalation Dashboard</h1>
+        <a href="/" class="refresh-btn" aria-label="Refresh Escalations">🔄 Refresh</a>
+
+        {% if escalations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Query</th>
+                    <th>Latest Note</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in escalations %}
+                <tr onclick="window.location='/escalation/{{ e.id }}'">
+                    <td>{{ e.id }}</td>
+                    <td>{{ e.user }}</td>
+                    <td>{{ e.query }}</td>
+                    <td class="note-preview">
+                        {% if e.notes %}
                         {{ e.notes[-1].msg }}
-                    {% else %}
+                        {% else %}
                         No replies yet
-                    {% endif %}
-                </td>
-                <td><span class="status {{ e.status }}">{{ e.status }}</span></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>No escalations found.</p>
-    {% endif %}
-</div>
+                        {% endif %}
+                    </td>
+                    <td><span class="status {{ e.status }}">{{ e.status }}</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>📭 No escalations found.</p>
+            <small>New escalations will appear here once they are reported.</small>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("main-content").style.display = "block";
+        });
+    </script>
 </body>
-</html>

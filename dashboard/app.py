@@ -6,6 +6,8 @@ from datetime import datetime
 import os
 import requests
 from dotenv import load_dotenv
+import time
+from datetime import timedelta
 
 # =======================
 # CONFIG
@@ -22,7 +24,8 @@ app.mount("/static", StaticFiles(directory="dashboard/static"), name="static")
 # HELPER FUNCTIONS
 # =======================
 def api_get(path: str):
-    """Call backend GET if configured, else None."""
+    """Call backend GET if configured, else return local fallback."""
+    time.sleep(1)  # Simulate 1 second API delay
     if not BACKEND_URL:
         return None
     r = requests.get(f"{BACKEND_URL}{path}", headers={"X-Admin-Token": ADMIN_TOKEN})
@@ -31,6 +34,7 @@ def api_get(path: str):
 
 def api_post(path: str, payload: dict):
     """Call backend POST if configured."""
+    time.sleep(1)  # Simulate 1 second API delay
     if not BACKEND_URL:
         return None
     r = requests.post(f"{BACKEND_URL}{path}", json=payload, headers={"X-Admin-Token": ADMIN_TOKEN})
@@ -40,6 +44,8 @@ def api_post(path: str, payload: dict):
 # =======================
 # FALLBACK IN-MEMORY DATA
 # =======================
+now = datetime.now()
+
 escalations = [
     {
         "id": 1,
@@ -48,7 +54,10 @@ escalations = [
         "attachments": [],
         "confidence": "LOW",
         "status": "open",
-        "notes": []
+        "notes": [
+            {"by": "user", "msg": "Hi, I’m worried about frost.", "timestamp": (now - timedelta(hours=5)).strftime("%Y-%m-%d %H:%M:%S")},
+            {"by": "advisor", "msg": "We’ll check the forecast.", "timestamp": (now - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")}
+        ]
     },
     {
         "id": 2,
@@ -57,9 +66,25 @@ escalations = [
         "attachments": [],
         "confidence": "HIGH",
         "status": "open",
-        "notes": []
-    }
+        "notes": [
+            {"by": "user", "msg": "Need market rate ASAP.", "timestamp": (now - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")}
+        ]
+    },
 ]
+
+# Add more sample escalations for UI testing
+for i in range(3, 21):
+    escalations.append({
+        "id": i,
+        "user": f"+91-9{i%10}xxxxxxx",
+        "query": f"Sample query number {i}?",
+        "attachments": [],
+        "confidence": "MEDIUM" if i % 2 == 0 else "LOW",
+        "status": "open" if i % 3 != 0 else "resolved",
+        "notes": [
+            {"by": "system", "msg": "Escalation created.", "timestamp": (now - timedelta(days=i)).strftime("%Y-%m-%d %H:%M:%S")}
+        ]
+    })
 
 # =======================
 # ROUTES

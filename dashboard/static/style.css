@@ -60,3 +60,21 @@ button:hover {
 form {
     display: inline;
 }
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    background: #fafafa;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+.empty-state p {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+.empty-state small {
+    font-size: 0.9em;
+    color: #999;
+}
