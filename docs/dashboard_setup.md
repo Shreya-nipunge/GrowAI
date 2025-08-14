@@ -21,11 +21,15 @@ cd GrowAI
 
 2. Install dependencies:
 
+```bash
 pip install -r requirements.txt
+```
 
 3. Copy `.env.example` to `.env`:
 
+```bash
 cp .env.example .env
+```
 
 4. Edit `.env`:
 
