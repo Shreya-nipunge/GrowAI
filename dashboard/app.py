@@ -2,18 +2,17 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import requests
 from dotenv import load_dotenv
 import time
-from datetime import timedelta
 
 # =======================
 # CONFIG
 # =======================
 load_dotenv()
-BACKEND_URL = os.getenv("BACKEND_URL", "")  # e.g. http://127.0.0.1:9000
+BACKEND_URL = os.getenv("BACKEND_URL", "")
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 
 app = FastAPI()
@@ -23,9 +22,13 @@ app.mount("/static", StaticFiles(directory="dashboard/static"), name="static")
 # =======================
 # HELPER FUNCTIONS
 # =======================
+SIMULATE_API_FAILURE = os.getenv("SIMULATE_API_FAILURE", "false").lower() == "true"
+
 def api_get(path: str):
     """Call backend GET if configured, else return local fallback."""
-    time.sleep(1)  # Simulate 1 second API delay
+    time.sleep(1)  # simulate network delay
+    if SIMULATE_API_FAILURE:
+        raise requests.RequestException("Simulated backend failure for testing")
     if not BACKEND_URL:
         return None
     r = requests.get(f"{BACKEND_URL}{path}", headers={"X-Admin-Token": ADMIN_TOKEN})
@@ -34,12 +37,15 @@ def api_get(path: str):
 
 def api_post(path: str, payload: dict):
     """Call backend POST if configured."""
-    time.sleep(1)  # Simulate 1 second API delay
+    time.sleep(1)  # simulate network delay
+    if SIMULATE_API_FAILURE:
+        raise requests.RequestException("Simulated backend failure for testing")
     if not BACKEND_URL:
         return None
     r = requests.post(f"{BACKEND_URL}{path}", json=payload, headers={"X-Admin-Token": ADMIN_TOKEN})
     r.raise_for_status()
     return r.json()
+
 
 # =======================
 # FALLBACK IN-MEMORY DATA
@@ -55,8 +61,10 @@ escalations = [
         "confidence": "LOW",
         "status": "open",
         "notes": [
-            {"by": "user", "msg": "Hi, I’m worried about frost.", "timestamp": (now - timedelta(hours=5)).strftime("%Y-%m-%d %H:%M:%S")},
-            {"by": "advisor", "msg": "We’ll check the forecast.", "timestamp": (now - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")}
+            {"by": "user", "msg": "Hi, I’m worried about frost.",
+             "timestamp": (now - timedelta(hours=5)).strftime("%Y-%m-%d %H:%M:%S")},
+            {"by": "advisor", "msg": "We’ll check the forecast.",
+             "timestamp": (now - timedelta(hours=4)).strftime("%Y-%m-%d %H:%M:%S")}
         ]
     },
     {
@@ -67,12 +75,13 @@ escalations = [
         "confidence": "HIGH",
         "status": "open",
         "notes": [
-            {"by": "user", "msg": "Need market rate ASAP.", "timestamp": (now - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")}
+            {"by": "user", "msg": "Need market rate ASAP.",
+             "timestamp": (now - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S")}
         ]
     },
 ]
 
-# Add more sample escalations for UI testing
+# Add extra sample data
 for i in range(3, 21):
     escalations.append({
         "id": i,
@@ -82,7 +91,8 @@ for i in range(3, 21):
         "confidence": "MEDIUM" if i % 2 == 0 else "LOW",
         "status": "open" if i % 3 != 0 else "resolved",
         "notes": [
-            {"by": "system", "msg": "Escalation created.", "timestamp": (now - timedelta(days=i)).strftime("%Y-%m-%d %H:%M:%S")}
+            {"by": "system", "msg": "Escalation created.",
+             "timestamp": (now - timedelta(days=i)).strftime("%Y-%m-%d %H:%M:%S")}
         ]
     })
 
@@ -91,32 +101,68 @@ for i in range(3, 21):
 # =======================
 @app.get("/")
 async def index(request: Request):
-    data = api_get("/api/escalations") if BACKEND_URL else escalations
+    try:
+        data = api_get("/api/escalations") if BACKEND_URL else escalations
+    except requests.RequestException:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "Unable to reach backend. Please try again later."},
+            status_code=500
+        )
     return templates.TemplateResponse("index.html", {"request": request, "escalations": data})
 
 @app.get("/escalation/{escalation_id}")
 async def view_escalation(request: Request, escalation_id: int):
-    item = None
-    if BACKEND_URL:
-        item = api_get(f"/api/escalations/{escalation_id}")
-    else:
-        item = next((e for e in escalations if e["id"] == escalation_id), None)
+    try:
+        if BACKEND_URL:
+            item = api_get(f"/api/escalations/{escalation_id}")
+        else:
+            item = next((e for e in escalations if e["id"] == escalation_id), None)
+    except requests.RequestException:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "Unable to reach backend. Please try again later."},
+            status_code=500
+        )
+
+    if not item:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "Escalation not found."},
+            status_code=404
+        )
+
     return templates.TemplateResponse("escalation.html", {"request": request, "item": item})
 
 @app.post("/escalation/{escalation_id}/respond")
-async def respond(escalation_id: int, message: str = Form(...)):
+async def respond(request: Request, escalation_id: int, message: str = Form(...)):
+    message = message.strip()
+    if not message:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "Reply cannot be empty."},
+            status_code=400
+        )
+
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if BACKEND_URL:
-        api_post(f"/api/escalations/{escalation_id}/respond", {"message": message})
-    else:
-        item = next((e for e in escalations if e["id"] == escalation_id), None)
-        if item:
-            item["notes"].append({
-                "by": "advisor",
-                "msg": message,
-                "timestamp": timestamp
-            })
+    try:
+        if BACKEND_URL:
+            api_post(f"/api/escalations/{escalation_id}/respond", {"message": message})
+        else:
+            item = next((e for e in escalations if e["id"] == escalation_id), None)
+            if item:
+                item["notes"].append({
+                    "by": "advisor",
+                    "msg": message,
+                    "timestamp": timestamp
+                })
+    except requests.RequestException:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": request, "message": "Unable to reach backend. Please try again later."},
+            status_code=500
+        )
 
     return RedirectResponse(url=f"/escalation/{escalation_id}", status_code=303)
 
@@ -124,16 +170,23 @@ async def respond(escalation_id: int, message: str = Form(...)):
 async def resolve(escalation_id: int):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    if BACKEND_URL:
-        api_post(f"/api/escalations/{escalation_id}/resolve", {"note": "Resolved via dashboard"})
-    else:
-        item = next((e for e in escalations if e["id"] == escalation_id), None)
-        if item:
-            item["status"] = "resolved"
-            item["notes"].append({
-                "by": "system",
-                "msg": "Escalation resolved.",
-                "timestamp": timestamp
-            })
+    try:
+        if BACKEND_URL:
+            api_post(f"/api/escalations/{escalation_id}/resolve", {"note": "Resolved via dashboard"})
+        else:
+            item = next((e for e in escalations if e["id"] == escalation_id), None)
+            if item:
+                item["status"] = "resolved"
+                item["notes"].append({
+                    "by": "system",
+                    "msg": "Escalation resolved.",
+                    "timestamp": timestamp
+                })
+    except requests.RequestException:
+        return templates.TemplateResponse(
+            "error.html",
+            {"request": {}, "message": "Unable to reach backend. Please try again later."},
+            status_code=500
+        )
 
     return RedirectResponse(url="/", status_code=303)
