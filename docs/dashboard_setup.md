@@ -17,6 +17,7 @@ This document explains how to run the escalation dashboard locally, configure en
 ```bash
 git clone https://github.com/Shreya-nipunge/GrowAI.git
 cd GrowAI
+cd dashboard
 ```
 
 2. Install dependencies:
@@ -29,6 +30,7 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
+cd ..
 ```
 
 4. Edit `.env`:
@@ -46,7 +48,7 @@ ADMIN_TOKEN=my-secret-token
 5. Start the dashboard:
 
 ```bash
-uvicorn app:app --reload
+uvicorn dashboard.app:app --reload
 ```
 
 6. Open your browser and go to:
