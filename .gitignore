@@ -63,3 +63,6 @@ ai/**/__pycache__/
 # Local media/data (if you add any later)
 data/
 media/
+
+.env
+**/.env
