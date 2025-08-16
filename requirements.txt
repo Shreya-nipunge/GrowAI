@@ -33,4 +33,4 @@ python-dotenv==1.0.1
 Jinja2
 python-multipart
 requests
->>>>>>> f945c5e30387520ccd92ec1f6fa1d9ca858b38a9
+
