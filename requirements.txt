@@ -1,15 +1,36 @@
+# Core AI & NLP dependencies
 openai-whisper
-torch==2.3.0+cpu
-torchvision==0.18.0+cpu
-torchaudio==2.3.0+cpu
+torch
+torchvision
+torchaudio
 ffmpeg-python
+<<<<<<< HEAD
+vosk
+transformers
+sentencepiece
+langdetect
+fastapi
+uvicorn
+gtts
+httpx
+python-dotenv
+TTS
+=======
 vosk==0.3.52
 transformers==4.42.4
 sentencepiece==0.2.0
 langdetect==1.0.9
-fastapi==0.111.0
-uvicorn==0.30.0
 gtts==2.5.1
+TTS>=0.21.3
+
+# API & Backend dependencies
+fastapi==0.111.0
+uvicorn[standard]
 httpx==0.27.0
 python-dotenv==1.0.1
-TTS>=0.21.3
+
+# Dashboard dependencies
+Jinja2
+python-multipart
+requests
+>>>>>>> f945c5e30387520ccd92ec1f6fa1d9ca858b38a9

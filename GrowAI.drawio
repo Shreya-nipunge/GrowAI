@@ -1,0 +1,61 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.0.9">
+  <diagram name="Page-1" id="YS82_5A7g-45tU4O_Xi1">
+    <mxGraphModel dx="1728" dy="964" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-7" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;endArrow=block;endFill=0;strokeWidth=2;shape=flexArrow;fontFamily=Times New Roman;" edge="1" parent="1" source="sjZpnMsJa_vuaxf10pB2-1" target="sjZpnMsJa_vuaxf10pB2-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-1" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Input Layer (WhatsApp → Webhook)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font face=&quot;Helvetica&quot;&gt;Farmer sends text/voice → Twilio API sends it to our backend&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;fillColor=#ADD8E6;labelBorderColor=none;gradientColor=none;strokeColor=#000000;strokeWidth=1.5;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="264" y="190" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-8" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;strokeWidth=2;fontFamily=Times New Roman;" edge="1" parent="1" source="sjZpnMsJa_vuaxf10pB2-2" target="sjZpnMsJa_vuaxf10pB2-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-2" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;&quot;&gt;Processing Layer (STT / NLU / CV)&lt;/b&gt;&lt;/font&gt;&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;STT – Whisper, Vosk&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;NLU – Bhashini + Custom Dictionary&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;code style=&quot;&quot; data-end=&quot;1734&quot; data-start=&quot;1708&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;CV – Crop image analysis&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;fillColor=#90EE90;strokeWidth=1.5;strokeColor=#000000;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="264" y="344" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-9" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;strokeWidth=2;fontFamily=Times New Roman;" edge="1" parent="1" source="sjZpnMsJa_vuaxf10pB2-3" target="sjZpnMsJa_vuaxf10pB2-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-3" value="&lt;b&gt;&lt;font style=&quot;font-size: 16px;&quot;&gt;Data Retrieval Layer (APIs, ChromaDB)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;code style=&quot;&quot; data-end=&quot;1841&quot; data-start=&quot;1819&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;ChromaDB (vector DB)&lt;/font&gt;&lt;/code&gt;&lt;br data-end=&quot;1844&quot; data-start=&quot;1841&quot;&gt;&lt;code data-end=&quot;1899&quot; data-start=&quot;1846&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Real-time APIs: Weather, Mandi prices, Govt schemes&lt;/font&gt;&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;fillColor=#FFFF99;strokeWidth=1.5;strokeColor=#000000;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="264" y="498" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-10" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;strokeWidth=2;fontFamily=Times New Roman;" edge="1" parent="1" source="sjZpnMsJa_vuaxf10pB2-4" target="sjZpnMsJa_vuaxf10pB2-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-4" value="&lt;code data-end=&quot;1984&quot; data-start=&quot;1944&quot;&gt;&lt;font style=&quot;font-size: 16px;&quot; face=&quot;Times New Roman&quot;&gt;&lt;b style=&quot;&quot;&gt;Reasoning &amp;amp; Safety Layer (RAG + Rules)&lt;/b&gt;&lt;/font&gt;&lt;/code&gt;&lt;br data-end=&quot;1987&quot; data-start=&quot;1984&quot;&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;RAG – approved datasets only&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Rules – no hallucinations, safe responses&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;fillColor=#FFA500;strokeWidth=1.5;strokeColor=#000000;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="264" y="652" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-11" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;strokeWidth=2;fontFamily=Times New Roman;" edge="1" parent="1" source="sjZpnMsJa_vuaxf10pB2-5" target="sjZpnMsJa_vuaxf10pB2-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-13" value="&lt;i&gt;Slow network case&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Verdana;" vertex="1" connectable="0" parent="sjZpnMsJa_vuaxf10pB2-11">
+          <mxGeometry x="0.018" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-5" value="&lt;code data-end=&quot;2127&quot; data-start=&quot;2100&quot;&gt;&lt;b&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 16px;&quot;&gt;Output Layer (Text + TTS)&lt;/font&gt;&lt;/b&gt;&lt;/code&gt;&lt;br data-end=&quot;2130&quot; data-start=&quot;2127&quot;&gt;&lt;code style=&quot;font-family: Helvetica;&quot; data-end=&quot;2165&quot; data-start=&quot;2132&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Text reply in farmer’s language&lt;/font&gt;&lt;/code&gt;&lt;br data-end=&quot;2168&quot; data-start=&quot;2165&quot;&gt;&lt;code style=&quot;&quot; data-end=&quot;2212&quot; data-start=&quot;2170&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Audio reply (TTS) for low-literacy users&lt;/font&gt;&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;fillColor=#FFB6C1;strokeWidth=1.5;strokeColor=#000000;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="264" y="806" width="300" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;curved=1;strokeWidth=2;dashPattern=8 8;dashed=1;fontFamily=Times New Roman;" edge="1" parent="1" source="sjZpnMsJa_vuaxf10pB2-6" target="sjZpnMsJa_vuaxf10pB2-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="680" y="1000" />
+              <mxPoint x="680" y="846" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-17" value="&lt;i&gt;Send later when ready&lt;/i&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Verdana;" vertex="1" connectable="0" parent="sjZpnMsJa_vuaxf10pB2-16">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sjZpnMsJa_vuaxf10pB2-6" value="&lt;code data-end=&quot;2277&quot; data-start=&quot;2254&quot;&gt;&lt;b&gt;&lt;font face=&quot;Times New Roman&quot; style=&quot;font-size: 16px;&quot;&gt;Offline &amp;amp; Queue Layer&lt;/font&gt;&lt;/b&gt;&lt;/code&gt;&lt;br data-end=&quot;2280&quot; data-start=&quot;2277&quot;&gt;&lt;code data-end=&quot;2328&quot; data-start=&quot;2282&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Store unanswered queries if internet is slow&lt;/font&gt;&lt;/code&gt;&lt;br data-end=&quot;2331&quot; data-start=&quot;2328&quot;&gt;&lt;code data-end=&quot;2373&quot; data-start=&quot;2333&quot;&gt;&lt;font face=&quot;Helvetica&quot;&gt;Send response later when data is ready&lt;/font&gt;&lt;/code&gt;" style="rounded=1;whiteSpace=wrap;html=1;rotation=0;fillColor=#D3D3D3;strokeWidth=1.5;strokeColor=#000000;fontFamily=Times New Roman;" vertex="1" parent="1">
+          <mxGeometry x="264" y="960" width="300" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
