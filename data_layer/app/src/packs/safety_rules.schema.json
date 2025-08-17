@@ -1,0 +1,176 @@
+{
+  "$defs": {
+    "Action": {
+      "properties": {
+        "advice": {
+          "title": "Advice",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "caution",
+            "danger"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "escalate_if_low_conf": {
+          "default": false,
+          "title": "Escalate If Low Conf",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "advice",
+        "severity"
+      ],
+      "title": "Action",
+      "type": "object"
+    },
+    "Condition": {
+      "properties": {
+        "variable": {
+          "enum": [
+            "precip_mm",
+            "wind_kmh",
+            "tmin_c",
+            "tmax_c",
+            "rain_prob_pct"
+          ],
+          "title": "Variable",
+          "type": "string"
+        },
+        "op": {
+          "enum": [
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "between",
+            "not_between",
+            "==",
+            "!="
+          ],
+          "title": "Op",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "variable",
+        "op",
+        "value"
+      ],
+      "title": "Condition",
+      "type": "object"
+    },
+    "SafetyRule": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "applies_to_crops": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies To Crops"
+        },
+        "when_all": {
+          "items": {
+            "$ref": "#/$defs/Condition"
+          },
+          "title": "When All",
+          "type": "array"
+        },
+        "then": {
+          "$ref": "#/$defs/Action"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rationale"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "when_all",
+        "then"
+      ],
+      "title": "SafetyRule",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "version": {
+      "default": "1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "rules": {
+      "items": {
+        "$ref": "#/$defs/SafetyRule"
+      },
+      "title": "Rules",
+      "type": "array"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "rules",
+    "generated_at"
+  ],
+  "title": "SafetyRulesPack",
+  "type": "object"
+}

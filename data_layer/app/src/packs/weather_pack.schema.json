@@ -1,0 +1,152 @@
+{
+  "$defs": {
+    "Location": {
+      "properties": {
+        "state": {
+          "title": "State",
+          "type": "string"
+        },
+        "district": {
+          "title": "District",
+          "type": "string"
+        },
+        "lat": {
+          "title": "Lat",
+          "type": "number"
+        },
+        "lon": {
+          "title": "Lon",
+          "type": "number"
+        }
+      },
+      "required": [
+        "state",
+        "district",
+        "lat",
+        "lon"
+      ],
+      "title": "Location",
+      "type": "object"
+    },
+    "SourceMeta": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url",
+        "retrieved_at"
+      ],
+      "title": "SourceMeta",
+      "type": "object"
+    },
+    "WeatherDay": {
+      "properties": {
+        "date": {
+          "format": "date",
+          "title": "Date",
+          "type": "string"
+        },
+        "tmin_c": {
+          "title": "Tmin C",
+          "type": "number"
+        },
+        "tmax_c": {
+          "title": "Tmax C",
+          "type": "number"
+        },
+        "precip_mm": {
+          "title": "Precip Mm",
+          "type": "number"
+        },
+        "wind_kmh": {
+          "title": "Wind Kmh",
+          "type": "number"
+        },
+        "rain_prob_pct": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rain Prob Pct"
+        }
+      },
+      "required": [
+        "date",
+        "tmin_c",
+        "tmax_c",
+        "precip_mm",
+        "wind_kmh"
+      ],
+      "title": "WeatherDay",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "version": {
+      "default": "1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "location": {
+      "$ref": "#/$defs/Location"
+    },
+    "days": {
+      "items": {
+        "$ref": "#/$defs/WeatherDay"
+      },
+      "title": "Days",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceMeta"
+    }
+  },
+  "required": [
+    "generated_at",
+    "location",
+    "days",
+    "source"
+  ],
+  "title": "WeatherPack",
+  "type": "object"
+}

@@ -1,0 +1,186 @@
+{
+  "$defs": {
+    "SourceMeta": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Url",
+          "type": "string"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "retrieved_at": {
+          "format": "date-time",
+          "title": "Retrieved At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url",
+        "retrieved_at"
+      ],
+      "title": "SourceMeta",
+      "type": "object"
+    },
+    "StageAdvice": {
+      "properties": {
+        "stage": {
+          "enum": [
+            "pre-sowing",
+            "sowing",
+            "vegetative",
+            "flowering",
+            "harvest"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "irrigation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Irrigation"
+        },
+        "fertilizer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fertilizer"
+        },
+        "pest_watch": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pest Watch"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "stage"
+      ],
+      "title": "StageAdvice",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "version": {
+      "default": "1.0",
+      "title": "Version",
+      "type": "string"
+    },
+    "crop": {
+      "title": "Crop",
+      "type": "string"
+    },
+    "region": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Region"
+    },
+    "language": {
+      "default": "en",
+      "enum": [
+        "en",
+        "hi",
+        "bn",
+        "te",
+        "ta",
+        "mr",
+        "kn",
+        "ml",
+        "pa",
+        "gu",
+        "or",
+        "as"
+      ],
+      "title": "Language",
+      "type": "string"
+    },
+    "stages": {
+      "items": {
+        "$ref": "#/$defs/StageAdvice"
+      },
+      "title": "Stages",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/SourceMeta"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "crop",
+    "stages",
+    "source",
+    "generated_at"
+  ],
+  "title": "CropPack",
+  "type": "object"
+}
+
+
+
+
+
+
+
