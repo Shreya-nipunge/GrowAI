@@ -1,9 +1,21 @@
 # Core AI & NLP dependencies
 openai-whisper
-torch==2.3.0+cpu
-torchvision==0.18.0+cpu
-torchaudio==2.3.0+cpu
+torch
+torchvision
+torchaudio
 ffmpeg-python
+<<<<<<< HEAD
+vosk
+transformers
+sentencepiece
+langdetect
+fastapi
+uvicorn
+gtts
+httpx
+python-dotenv
+TTS
+=======
 vosk==0.3.52
 transformers==4.42.4
 sentencepiece==0.2.0
@@ -21,3 +33,4 @@ python-dotenv==1.0.1
 Jinja2
 python-multipart
 requests
+

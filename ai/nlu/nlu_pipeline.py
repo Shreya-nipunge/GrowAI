@@ -2,7 +2,7 @@
 # Agentic NLU pipeline for KrishiMitra AI
 
 import json
-import re
+import asyncio
 from typing import Dict, Any
 
 from transformers import pipeline
@@ -17,10 +17,12 @@ class KrishiMitraNLU:
         self.translator = Translator()
 
         # Intent + entity extraction
+        # Intent + entity extraction
         self.intent_classifier = pipeline(
-            "text-classification",
-            model="facebook/bart-large-mnli"  # Multi-domain zero-shot intent detection
+            "zero-shot-classification",  # <--- Change here
+            model="facebook/bart-large-mnli"
         )
+
 
         self.entity_extractor = pipeline(
             "ner",
@@ -35,23 +37,26 @@ class KrishiMitraNLU:
             "general_query": "Knowledge_Base",
         }
 
-    def detect_and_translate(self, text: str) -> Dict[str, str]:
+    async def detect_and_translate(self, text: str) -> Dict[str, str]:
         """Detect language and translate to English if needed."""
-        detection = self.translator.detect(text)
+        detection = await self.translator.detect(text)
         lang = detection.lang
         translated_text = text
 
         if lang != "en":
-            translated_text = self.translator.translate(text, src=lang, dest="en").text
+            translated_text = (await self.translator.translate(text, src=lang, dest="en")).text
 
         return {"lang": lang, "translated_text": translated_text}
+
 
     def classify_intent(self, text: str) -> str:
         """Classify user intent using zero-shot classification."""
         candidate_labels = list(self.tool_map.keys())
-        result = self.intent_classifier(text, candidate_labels)
-        intent = result[0]['label']
+        result = self.intent_classifier(text, candidate_labels=candidate_labels)
+        intent = result['labels'][0]  # <--- Fix here
         return intent
+
+
 
     def extract_entities(self, text: str) -> Dict[str, Any]:
         """Extract entities from text."""
@@ -68,8 +73,7 @@ class KrishiMitraNLU:
 
     def process(self, user_message: str) -> Dict[str, Any]:
         """Full NLU pipeline execution."""
-        # Step 1: Detect language & translate
-        lang_info = self.detect_and_translate(user_message)
+        lang_info = asyncio.run(self.detect_and_translate(user_message))  # <- run async
 
         # Step 2: Intent classification
         intent = self.classify_intent(lang_info["translated_text"])
@@ -89,6 +93,7 @@ class KrishiMitraNLU:
             "entities": entities,
             "next_action": action
         }
+
 
 
 if __name__ == "__main__":
