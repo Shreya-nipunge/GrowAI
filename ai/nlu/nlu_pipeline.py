@@ -2,67 +2,61 @@
 # Agentic NLU pipeline for KrishiMitra AI
 
 import json
-import asyncio
 from typing import Dict, Any
-
+from deep_translator import GoogleTranslator
 from transformers import pipeline
-from googletrans import Translator
-
 
 class KrishiMitraNLU:
     def __init__(self):
         print("Loading NLU models...")
 
-        # Language detection / translation
-        self.translator = Translator()
-
-        # Intent + entity extraction
-        # Intent + entity extraction
+        # Intent classification (zero-shot)
         self.intent_classifier = pipeline(
-            "zero-shot-classification",  # <--- Change here
+            "zero-shot-classification",
             model="facebook/bart-large-mnli"
         )
 
-
+        # Entity extraction (multilingual NER for Indian languages)
         self.entity_extractor = pipeline(
             "ner",
-            model="Davlan/xlm-roberta-large-ner-hrl"  # Multilingual NER for Indian langs
+            model="Davlan/xlm-roberta-large-ner-hrl"
         )
 
         # Tool mapping (agentic decision layer)
         self.tool_map = {
-            "get_crop_price": "eNAM_API",
+            "get_crop_price": "Agmarknet_API",
             "weather_forecast": "Weather_API",
             "disease_detection": "Vision_Model",
             "general_query": "Knowledge_Base",
         }
 
-    async def detect_and_translate(self, text: str) -> Dict[str, str]:
-        """Detect language and translate to English if needed."""
-        detection = await self.translator.detect(text)
-        lang = detection.lang
-        translated_text = text
+    def detect_and_translate(self, user_message: str) -> Dict[str, str]:
+        """Translate to English if needed."""
+        # Translate using auto-detection
+        translated_text = GoogleTranslator(source='auto', target='en').translate(user_message)
+        
+        # We cannot reliably get the detected language, so default to 'unknown' or 'auto'
+        return {"lang": "auto", "translated_text": translated_text}
 
-        if lang != "en":
-            translated_text = (await self.translator.translate(text, src=lang, dest="en")).text
 
-        return {"lang": lang, "translated_text": translated_text}
-
+    def translate_response(self, text: str, target_lang: str) -> str:
+        """Translate bot response back to user's language."""
+        if target_lang != "en":
+            return GoogleTranslator(source='en', target=target_lang).translate(text)
+        return text
 
     def classify_intent(self, text: str) -> str:
         """Classify user intent using zero-shot classification."""
         candidate_labels = list(self.tool_map.keys())
         result = self.intent_classifier(text, candidate_labels=candidate_labels)
-        intent = result['labels'][0]  # <--- Fix here
+        intent = result['labels'][0]
         return intent
-
-
 
     def extract_entities(self, text: str) -> Dict[str, Any]:
         """Extract entities from text."""
         entities = self.entity_extractor(text)
         cleaned_entities = [
-            {"entity": e["entity_group"], "text": e["word"]}
+            {"entity": e.get("entity_group", e.get("entity")), "text": e["word"]}
             for e in entities
         ]
         return cleaned_entities
@@ -73,7 +67,7 @@ class KrishiMitraNLU:
 
     def process(self, user_message: str) -> Dict[str, Any]:
         """Full NLU pipeline execution."""
-        lang_info = asyncio.run(self.detect_and_translate(user_message))  # <- run async
+        lang_info = self.detect_and_translate(user_message)
 
         # Step 2: Intent classification
         intent = self.classify_intent(lang_info["translated_text"])
@@ -93,7 +87,6 @@ class KrishiMitraNLU:
             "entities": entities,
             "next_action": action
         }
-
 
 
 if __name__ == "__main__":
