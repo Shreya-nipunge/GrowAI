@@ -1,12 +1,13 @@
 import pickle
 import numpy as np
 import cv2
+from tensorflow import keras
+import os
 
-# Load the trained plant disease model and label encoder
-with open("ai/cv/models/plant_disease_model.pkl", "rb") as f:
-    disease_model = pickle.load(f)
 
-with open("ai/cv/models/plant_disease_labels.pkl", "rb") as f:
+disease_model = keras.models.load_model(r'D:\Codes\Krishimitra\GrowAI\ai\cv\models\plant_disease_model.h5')
+
+with open(r'D:\Codes\Krishimitra\GrowAI\ai\cv\models\plant_disease_labels.pkl', "rb") as f:
     disease_labels = pickle.load(f)
 
 def preprocess_image(image_path, target_size=(224, 224)):
